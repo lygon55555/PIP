@@ -35,7 +35,7 @@ class ViewController: UIViewController {
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(doPinch(_:)))
         self.view.addGestureRecognizer(pinch)
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(drag))
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         pipView.addGestureRecognizer(panGesture)
         self.view.addGestureRecognizer(panGesture)
         
@@ -48,61 +48,39 @@ class ViewController: UIViewController {
     }
     
     @objc func doPinch(_ pinch: UIPinchGestureRecognizer) {
-        // 이미지를 스케일에 맞게 변환
         self.pipView.transform = self.pipView.transform.scaledBy(x: pinch.scale, y: pinch.scale)
-        // 다음 변환을 위해 핀치의 스케일 속성을 1로 설정
         pinch.scale = 1
     }
     
-    @objc func drag(sender: UIPanGestureRecognizer) {
-        // self는 여기서 ViewController이므로 self.view ViewController가 기존에가지고 있는 view이다.
-        let translation = sender.translation(in: self.pipView) // translation에 움직인 위치를 저장한다.
+    @objc func handlePan(_ sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: self.pipView)
+        let statusFrame = view.window?.windowScene?.statusBarManager?.statusBarFrame
         
-        
-        
-        /*
-         
-         x0,y0-----------x1,y1
-         |                  |
-         |                  |
-         |                  |
-         x2,y2-----------x3,y3
-         
-         */
-        
-        var x0 = pipView.frame.origin.x
-        var y0 = pipView.frame.origin.y
-        
-        var x1 = pipView.frame.origin.x + pipView.frame.width
-        var y1 = pipView.frame.origin.y
-        
-        var x2 = pipView.frame.origin.x
-        var y2 = pipView.frame.origin.y + pipView.frame.height
-        
-        var x3 = pipView.frame.origin.x + pipView.frame.width
-        var y3 = pipView.frame.origin.y + pipView.frame.height
-        
-        if (x0 < 20 && y0 < 60)
-            || (x1 > UIScreen.main.bounds.width - 20 && y1 < 60)
-            || (x2 < 20 && y2 > UIScreen.main.bounds.height - 20)
-            || (x3 > UIScreen.main.bounds.width - 20 && y3 > UIScreen.main.bounds.height - 20) {
-            
+        if let senderView = self.pipView {
+            if senderView.frame.origin.x < 20.0 {
+                senderView.frame.origin = CGPoint(x: 20.0, y: senderView.frame.origin.y)
+            }
+            if senderView.frame.origin.y < statusFrame?.height ?? 0 + 20 {
+                senderView.frame.origin = CGPoint(x: senderView.frame.origin.x, y: statusFrame?.height ?? 0 + 20)
+            }
+            if senderView.frame.origin.x + senderView.frame.size.width > view.frame.width - 20 {
+                senderView.frame.origin = CGPoint(x: view.frame.width - senderView.frame.size.width - 20, y: senderView.frame.origin.y)
+            }
+            if senderView.frame.origin.y + senderView.frame.size.height > view.frame.height - 30 {
+                senderView.frame.origin = CGPoint(x: senderView.frame.origin.x, y: view.frame.height - senderView.frame.size.height - 30)
+            }
         }
 
-        // sender의 view는 sender가 바라보고 있는 circleView이다. 드래그로 이동한 만큼 circleView를 이동시킨다.
-        pipView!.center = CGPoint(x: pipView!.center.x + translation.x, y: pipView!.center.y + translation.y)
-        sender.setTranslation(.zero, in: self.pipView) // 0으로 움직인 값을 초기화 시켜준다.
-        
-        
-        print("x : \(pipView.frame.origin.x)")
-        print("y : \(pipView.frame.origin.y)")
-        
-        
-        // 화면 범위 못 넘어가게 하고
-        // rotate 가능하게 하고
-        // 클릭하면 전체화면으로 UIView.animate 써서 만들기
-        // view 가 기울어진 후 드래그 하면 이동이 이상함
+        if let centerX = self.pipView?.center.x, let centerY = self.pipView?.center.y {
+            self.pipView?.center = CGPoint.init(x: centerX + translation.x , y: centerY + translation.y)
+            sender.setTranslation(CGPoint.zero, in: self.pipView)
+        }
     }
+    
+    // 화면 범위 못 넘어가게 하고  (SafeArea)
+    // 클릭하면 전체화면으로 UIView.animate 써서 만들기
+    // view 가 기울어진 후 드래그 하면 이동이 이상함
+    
     
     @objc func rotate(_ gesture: UIRotationGestureRecognizer) {
         pipView.transform = pipView.transform.rotated(by: gesture.rotation)
