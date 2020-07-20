@@ -16,11 +16,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JmP-kt-ZRi">
-                                <rect key="frame" x="154" y="714" width="240" height="128"/>
+                                <rect key="frame" x="216" y="742" width="178" height="100"/>
                                 <color key="backgroundColor" red="0.039215686274509803" green="0.72941176470588232" blue="0.70980392156862748" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="JmP-kt-ZRi" secondAttribute="height" multiplier="15:8" id="2Ju-kI-UxP"/>
-                                    <constraint firstAttribute="height" constant="128" id="Cgq-7v-vRl"/>
+                                    <constraint firstAttribute="width" secondItem="JmP-kt-ZRi" secondAttribute="height" multiplier="16:9" id="1Ie-K3-Ytu"/>
+                                    <constraint firstAttribute="height" constant="100" id="en6-GY-6m9"/>
                                 </constraints>
                             </view>
                         </subviews>
