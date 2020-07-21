@@ -77,11 +77,7 @@ class ViewController: UIViewController {
         }
     }
     
-    
-    
-    
     // view 가 기울어진 후 드래그 하면 이동이 이상함
-    
     
     @objc func doRotate(_ gesture: UIRotationGestureRecognizer) {
         pipView.transform = pipView.transform.rotated(by: gesture.rotation)
