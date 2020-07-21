@@ -35,11 +35,11 @@ class ViewController: UIViewController {
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(doPinch(_:)))
         self.view.addGestureRecognizer(pinch)
         
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(doPan(_:)))
         pipView.addGestureRecognizer(panGesture)
         self.view.addGestureRecognizer(panGesture)
         
-        let rotate = UIRotationGestureRecognizer(target: self, action: #selector(rotate(_:)))
+        let rotate = UIRotationGestureRecognizer(target: self, action: #selector(doRotate(_:)))
         self.view.addGestureRecognizer(rotate)
         
         pinch.delegate = self
@@ -52,7 +52,7 @@ class ViewController: UIViewController {
         pinch.scale = 1
     }
     
-    @objc func handlePan(_ sender: UIPanGestureRecognizer) {
+    @objc func doPan(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: self.pipView)
         let statusFrame = view.window?.windowScene?.statusBarManager?.statusBarFrame
         
@@ -77,12 +77,13 @@ class ViewController: UIViewController {
         }
     }
     
-    // 화면 범위 못 넘어가게 하고  (SafeArea)
-    // 클릭하면 전체화면으로 UIView.animate 써서 만들기
+    
+    
+    
     // view 가 기울어진 후 드래그 하면 이동이 이상함
     
     
-    @objc func rotate(_ gesture: UIRotationGestureRecognizer) {
+    @objc func doRotate(_ gesture: UIRotationGestureRecognizer) {
         pipView.transform = pipView.transform.rotated(by: gesture.rotation)
         gesture.rotation = 0
     }
