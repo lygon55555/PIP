@@ -53,6 +53,8 @@ class ViewController: UIViewController {
     }
     
     @objc func doPan(_ sender: UIPanGestureRecognizer) {
+        /*
+         // set boundary
         let translation = sender.translation(in: self.pipView)
         let statusFrame = view.window?.windowScene?.statusBarManager?.statusBarFrame
         
@@ -75,6 +77,11 @@ class ViewController: UIViewController {
             self.pipView?.center = CGPoint.init(x: centerX + translation.x , y: centerY + translation.y)
             sender.setTranslation(CGPoint.zero, in: self.pipView)
         }
+        */
+        
+        let translation = sender.translation(in: self.pipView)
+        pipView!.center = CGPoint(x: pipView!.center.x + translation.x, y: pipView!.center.y + translation.y)
+        sender.setTranslation(.zero, in: self.pipView)
     }
     
     // view 가 기울어진 후 드래그 하면 이동이 이상함
